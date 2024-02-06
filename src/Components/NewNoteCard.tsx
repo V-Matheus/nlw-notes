@@ -1,8 +1,22 @@
-import React from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { X } from 'lucide-react'
 
 const NewNoteCard = () => {
+
+  const [shouldShowOnBording, setShouldShowOnBording] = useState(true)
+
+  function handleStartEditor() {
+    setShouldShowOnBording(false)
+  }
+
+  function handleContentChanged(event: ChangeEvent<HTMLTextAreaElement>) {
+    if (event.target.value === '') {
+      setShouldShowOnBording(true)
+    }
+
+  }
+
   return (
     <Dialog.Root>
       <Dialog.Trigger className='rounded-md flex flex-col bg-slate-700 p-5 gap-y-3 outline-none text-left hover:ring-2 hover:ring-slate-600 focus:ring-2 focus:ring-lime-400'>
@@ -18,7 +32,15 @@ const NewNoteCard = () => {
           </Dialog.Close>
           <div className='flex flex-1 flex-col gap-3 p-5'>
             <span className='text-sm font-medium text-slate-200'>Adicionar nota</span>
-            <p className='text-sm leading-6 text-slate-300'>Comece <button className='font-medium text-lime-400 hover:underline' >gravando uma nota</button> em áudio ou se preferir <button className='font-medium text-lime-400 hover:underline' >utilize apenas texto</button>.</p>
+
+            {shouldShowOnBording ? <p className='text-sm leading-6 text-slate-300'>Comece <button className='font-medium text-lime-400 hover:underline' >gravando uma nota</button> em áudio ou se preferir <button onClick={handleStartEditor} className='font-medium text-lime-400 hover:underline' >utilize apenas texto</button>.</p> : <textarea
+              autoFocus
+              className='text-sm leading-6 text-slate-400 bg-transparent resize-none flex-1 outline-none'
+              onChange={handleContentChanged}
+            >
+
+            </textarea>}
+
           </div>
 
           <button type='button' className='w-full bg-lime-400 py-4 text-center text-sm text-lime-950 outiline-none font-medium hover:bg-lime-500'>Salvar Nota</button>
