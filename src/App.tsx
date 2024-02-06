@@ -14,9 +14,8 @@ function App() {
 
       <div className='grid grid-cols-3 p-4 gap-6 auto-rows-[250px] overflow-hidden'>
         <NewNoteCard />
-        <NoteCard />
-        <NoteCard />
-        <NoteCard />
+        <NoteCard date={new Date()} content='Hello Word' />
+        <NoteCard date={new Date()} content='teste' />
       </div>
     </div>
   )
