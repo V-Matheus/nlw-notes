@@ -26,7 +26,11 @@ const NewNoteCard = ({ onNoteCreated }: NewNoteCardProps) => {
 
   function handleSaveNote(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+
     onNoteCreated(content)
+
+    setContent('')
+    setShouldShowOnBording(true)
 
     toast.success('Nota criada com sucesso')
   }
@@ -55,6 +59,7 @@ const NewNoteCard = ({ onNoteCreated }: NewNoteCardProps) => {
                 autoFocus
                 className='text-sm leading-6 text-slate-400 bg-transparent resize-none flex-1 outline-none'
                 onChange={handleContentChanged}
+                value={content}
               >
 
               </textarea>}

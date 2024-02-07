@@ -5,18 +5,17 @@ import logo from './assets/Logo.svg'
 
 function App() {
 
-  const [notes, setNotes] = useState([
-    {
-      id: 1, date: new Date(), content: 'Hello word'
-    },
-    {
-      id: 2, date: new Date(), content: 'Hello'
-    }
-  ])
+  interface Note {
+    id: string,
+    date: Date,
+    content: string
+  }
+
+  const [notes, setNotes] = useState<Note[]>([])
 
   function onNoteCreated(content: string) {
     const newNote = {
-      id: Math.random(),
+      id: crypto.randomUUID(),
       date: new Date(),
       content
     }
@@ -34,7 +33,7 @@ function App() {
       <div className='h-px bg-slate-700' />
 
       <div className='grid grid-cols-3 p-4 gap-6 auto-rows-[250px] overflow-hidden'>
-        <NewNoteCard onNoteCreated={onNoteCreated}/>
+        <NewNoteCard onNoteCreated={onNoteCreated} />
 
         {notes.map((note) => {
           return <NoteCard key={note.id} note={note} />
