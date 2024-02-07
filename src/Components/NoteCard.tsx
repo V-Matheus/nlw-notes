@@ -15,7 +15,9 @@ const NoteCard = ({ note }: NoteCardProps) => {
   return (
     <Dialog.Root>
       <Dialog.Trigger className='rounded-md text-left flex flex-col outline-none bg-slate-800 p-5 gap-y-3 overflow-hidden relative hover:ring-2 hover:ring-slate-600 focus:ring-2 focus:ring-lime-400'>
-        <span className='text-sm font-medium text-slate-200'>{note.date.toISOString()}</span>
+        <span className='text-sm font-medium text-slate-200'>
+          {formatDistanceToNow(note.date, { locale: ptBR, addSuffix: true })}
+        </span>
         <p className='text-sm leading-6 text-slate-300'>{note.content}</p>
 
         <div className='absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/60 to-black/0 pointer-events-none' />
@@ -28,7 +30,9 @@ const NoteCard = ({ note }: NoteCardProps) => {
             <X className='size-5' />
           </Dialog.Close>
           <div className='flex flex-1 flex-col gap-3 p-5'>
-            <span className='text-sm font-medium text-slate-200'>{formatDistanceToNow(note.date, { locale: ptBR, addSuffix: true })}</span>
+            <span className='text-sm font-medium text-slate-200'>
+              {formatDistanceToNow(note.date, { locale: ptBR, addSuffix: true })}
+            </span>
             <p className='text-sm leading-6 text-slate-300'>{note.content}</p>
           </div>
 
