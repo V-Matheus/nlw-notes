@@ -7,6 +7,8 @@ interface NewNoteCardProps {
   onNoteCreated: (coontent: string) => void
 }
 
+let speechRecognition: SpeechRecognition | null = null
+
 const NewNoteCard = ({ onNoteCreated }: NewNoteCardProps) => {
 
   const [shouldShowOnBording, setShouldShowOnBording] = useState(true)
@@ -41,11 +43,48 @@ const NewNoteCard = ({ onNoteCreated }: NewNoteCardProps) => {
   }
 
   function handleStartRecording() {
+
+    const isSpeechRecognitionAPIAvalable = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window
+
+    if (!isSpeechRecognitionAPIAvalable) {
+      alert('Infelizmente seu navegador não suporta a API de gravação')
+      return
+    }
+
     setIsRecording(true)
+    setShouldShowOnBording(false)
+
+    const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition
+
+    speechRecognition = new SpeechRecognitionAPI()
+
+    speechRecognition.lang = 'pt-BR'
+    speechRecognition.continuous = true
+    speechRecognition.maxAlternatives = 1
+    speechRecognition.interimResults = true
+
+    speechRecognition.onresult = (event) => {
+      const transcription = Array.from(event.results).reduce((text, result) => {
+        return text.concat(result[0].transcript)
+      }, '')
+
+      setContent(transcription)
+    }
+
+    speechRecognition.onerror = (event) => {
+      console.error(event)
+    }
+
+    speechRecognition.start()
+
   }
 
   function handleStopRecording() {
     setIsRecording(false)
+
+    if (speechRecognition) {
+      speechRecognition.stop()
+    }
   }
 
   return (
