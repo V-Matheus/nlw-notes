@@ -10,6 +10,7 @@ interface NewNoteCardProps {
 const NewNoteCard = ({ onNoteCreated }: NewNoteCardProps) => {
 
   const [shouldShowOnBording, setShouldShowOnBording] = useState(true)
+  const [isReCording, setIsRecording] = useState(false)
   const [content, setContent] = useState('')
 
   function handleStartEditor() {
@@ -24,8 +25,12 @@ const NewNoteCard = ({ onNoteCreated }: NewNoteCardProps) => {
     }
   }
 
-  function handleSaveNote(event: FormEvent<HTMLFormElement>) {
+  function handleSaveNote(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault()
+
+    if (content === '') {
+      return
+    }
 
     onNoteCreated(content)
 
@@ -33,6 +38,14 @@ const NewNoteCard = ({ onNoteCreated }: NewNoteCardProps) => {
     setShouldShowOnBording(true)
 
     toast.success('Nota criada com sucesso')
+  }
+
+  function handleStartRecording() {
+    setIsRecording(true)
+  }
+
+  function handleStopRecording() {
+    setIsRecording(false)
   }
 
   return (
@@ -50,27 +63,53 @@ const NewNoteCard = ({ onNoteCreated }: NewNoteCardProps) => {
             <X className='size-5' />
           </Dialog.Close>
 
-          <form className='flex-1 flex flex-col' onSubmit={handleSaveNote}>
+          <form className='flex-1 flex flex-col'>
 
             <div className='flex flex-1 flex-col gap-3 p-5'>
               <span className='text-sm font-medium text-slate-200'>Adicionar nota</span>
 
-              {shouldShowOnBording ? <p className='text-sm leading-6 text-slate-300'>Comece <button className='font-medium text-lime-400 hover:underline' >gravando uma nota</button> em áudio ou se preferir <button onClick={handleStartEditor} className='font-medium text-lime-400 hover:underline' >utilize apenas texto</button>.</p> : <textarea
-                autoFocus
-                className='text-sm leading-6 text-slate-400 bg-transparent resize-none flex-1 outline-none'
-                onChange={handleContentChanged}
-                value={content}
-              >
+              {shouldShowOnBording ?
+                <p className='text-sm leading-6 text-slate-300'>
+                  Comece{' '}
+                  <button
+                    type='button'
+                    className='font-medium text-lime-400 hover:underline'
+                    onClick={handleStartRecording}>
+                    gravando uma nota
+                  </button>
+                  {' '}em áudio ou se preferir{' '}
+                  <button
+                    type='button'
+                    onClick={handleStartEditor}
+                    className='font-medium text-lime-400 hover:underline' >
+                    {' '}utilize apenas texto{' '}
+                  </button>
+                  .
+                </p> :
+                <textarea
+                  autoFocus
+                  className='text-sm leading-6 text-slate-400 bg-transparent resize-none flex-1 outline-none'
+                  onChange={handleContentChanged}
+                  value={content}
+                >
 
-              </textarea>}
+                </textarea>}
 
             </div>
 
-            <button
-              type='submit'
+            {isReCording ? (<button
+              type='button'
+              onClick={handleStopRecording}
+              className='w-full flex items-center justify-center gap-2 bg-slate-900 py-4 text-center text-sm text-slate-300 outiline-none font-medium hover:text-slate-100'>
+              <div className='size-3 rounded-full bg-red-500 animate-pulse' />
+              Gravando! (click p/ interromper)
+            </button>) : (<button
+              type='button'
+              onClick={handleSaveNote}
               className='w-full bg-lime-400 py-4 text-center text-sm text-lime-950 outiline-none font-medium hover:bg-lime-500'>
               Salvar Nota
-            </button>
+            </button>)}
+
           </form>
         </Dialog.Content>
       </Dialog.Portal>
