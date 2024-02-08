@@ -27,11 +27,20 @@ function App() {
       date: new Date(),
       content
     }
-    const noteArray = [newNote, ...notes]
+    const notesArray = [newNote, ...notes]
 
-    setNotes(noteArray)
+    setNotes(notesArray)
 
-    localStorage.setItem('notes', JSON.stringify(noteArray))
+    localStorage.setItem('notes', JSON.stringify(notesArray))
+  }
+
+  function onNoteDeleted(id: string) {
+    const notesArray = notes.filter(note => {
+      return note.id !== id
+    })
+
+    setNotes(notesArray)
+    localStorage.setItem('notes', JSON.stringify(notesArray))
   }
 
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
@@ -63,7 +72,7 @@ function App() {
         <NewNoteCard onNoteCreated={onNoteCreated} />
 
         {filteredNotes.map((note) => {
-          return <NoteCard key={note.id} note={note} />
+          return <NoteCard key={note.id} note={note} onNoteDeleted={onNoteDeleted} />
         })}
       </div>
     </div>
