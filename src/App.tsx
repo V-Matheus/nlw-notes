@@ -11,7 +11,14 @@ function App() {
     content: string
   }
 
-  const [notes, setNotes] = useState<Note[]>([])
+  const [notes, setNotes] = useState<Note[]>(() => {
+    const noteOnStorage = localStorage.getItem('notes')
+
+    if (noteOnStorage) {
+      return JSON.parse(noteOnStorage)
+    }
+    return []
+  })
 
   function onNoteCreated(content: string) {
     const newNote = {
@@ -20,7 +27,11 @@ function App() {
       content
     }
 
-    setNotes([newNote, ...notes])
+    const noteArray = [newNote, ...notes]
+
+    setNotes(noteArray)
+
+    localStorage.setItem('notes', JSON.stringify(noteArray))
   }
 
   return (
